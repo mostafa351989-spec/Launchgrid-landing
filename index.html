@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LaunchGrid | تصميم مواقع احترافية</title>
+    <meta name="description" content="LaunchGrid منصة ذكية لتوليد وتصميم مواقع احترافية مع معاينة وتنزيل مباشر.">
+    <meta name="keywords" content="تصميم مواقع, انشاء موقع, متجر الكتروني, landing page, LaunchGrid">
+    <meta name="theme-color" content="#00ff88">
+    <style>
+        *{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,sans-serif;background:#0a0f0a;color:#e8ffe8}header,section,footer{padding:24px}header{background:#141f14;text-align:center}.wrap{max-width:1000px;margin:auto}.btn{display:inline-block;background:#00ff88;color:#000;padding:12px 18px;border:none;border-radius:10px;cursor:pointer;text-decoration:none;font-weight:700}.card{background:#141f14;border:1px solid rgba(0,255,136,.2);padding:18px;border-radius:14px;margin:14px 0}textarea,input,select{width:100%;padding:12px;margin:8px 0;background:#0f1a0f;color:#e8ffe8;border:1px solid rgba(0,255,136,.2);border-radius:10px}iframe{width:100%;height:420px;border:1px solid rgba(0,255,136,.2);border-radius:12px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}.muted{opacity:.75}.hidden{display:none}.lock{position:relative}.overlay{position:absolute;inset:0;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;border-radius:12px}.blur{filter:blur(5px)}footer{text-align:center;opacity:.7}
+    </style>
+</head>
+<body>
+    <header>
+        <div class="wrap">
+            <h1>⚡ LaunchGrid</h1>
+            <p class="muted">مولد مواقع جاهزة للمعاينة والتنزيل</p>
+            <p style="margin-top:10px;color:#00ff88">🔥 اطلب موقعك الآن خلال دقائق</p>
+        </div>
+    </header>
+    <section>
+        <div class="wrap grid">
+            <div class="card">
+                <h3>أنشئ موقعك</h3>
+                <textarea id="desc" placeholder="اوصف موقعك..."></textarea>
+                <select id="type">
+                    <option value="landing">Landing Page</option>
+                    <option value="business">Business</option>
+                    <option value="store">Store</option>
+                </select>
+                <button class="btn" onclick="previewSite()">معاينة الموقع</button>
+                <button class="btn" onclick="buyNow()" style="margin-top:8px">شراء وتنزيل</button>
+            </div>
+            <div class="card">
+                <h3>المعاينة</h3>
+                <div class="lock">
+                    <iframe id="frame" sandbox="allow-scripts"></iframe>
+                    <div id="overlay" class="overlay hidden">🔒 النسخة الكاملة بعد الدفع</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="wrap card">
+            <h3>المميزات</h3>
+            <div class="grid">
+                <div>⚡ توليد سريع</div>
+                <div>📱 مناسب للهاتف</div>
+                <div>💾 تنزيل مباشر</div>
+                <div>🎨 ألوان احترافية</div>
+            </div>
+        </div>
+    </section>
+    <footer>
+        <div>LaunchGrid © 2026</div>
+        <div style="margin-top:10px">
+            <a class="btn" href="https://wa.me/201044907363" target="_blank">واتساب مباشر</a>
+        </div>
+    </footer>
+    <script>
+        const frame = document.getElementById('frame');
+        const overlay = document.getElementById('overlay');
+        let generatedHTML = '';
+        let paid = false;
+
+        function esc(s) {
+            return s.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]));
+        }
+
+        function build(desc, type) {
+            desc = esc(desc);
+            const c = { landing: 'ابدأ الآن', business: 'تواصل معنا', store: 'تسوق الآن' }[type] || 'ابدأ';
+            return `<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${desc}</title><style>body{font-family:Arial;margin:0;background:#fff;color:#111}header{padding:40px;background:#111;color:#fff;text-align:center}section{padding:24px}.btn{background:#00ff88;border:none;padding:12px 16px;border-radius:8px;font-weight:700}</style></head><body><header><h1>${desc}</h1><p>Preview Version</p></header><section><h2>خدمات</h2><p>تصميم وتطوير وتجهيز موقع احترافي.</p><button class='btn'>${c}</button></section></body></html>`;
+        }
+
+        function previewSite() {
+            const d = document.getElementById('desc').value.trim();
+            const t = document.getElementById('type').value;
+            if (d.length < 5) {
+                alert('اكتب وصف أوضح');
+                return;
+            }
+            generatedHTML = build(d, t);
+            frame.srcdoc = generatedHTML;
+            frame.classList.remove('blur');
+            overlay.classList.add('hidden');
+            setTimeout(() => {
+                if (!paid) {
+                    frame.classList.add('blur');
+                    overlay.classList.remove('hidden');
+                }
+            }, 8000);
+        }
+
+        function buyNow() {
+            const email = prompt('اكتب بريدك الإلكتروني');
+            if (!email || !email.includes('@')) {
+                alert('بريد غير صحيح');
+                return;
+            }
+            paid = true;
+            downloadSite();
+        }
+
+        function downloadSite() {
+            if (!generatedHTML) {
+                alert('اعمل معاينة أولاً');
+                return;
+            }
+
+            const desc = document.getElementById('desc').value.trim();
+            let fileName = 'موقعي.html';
+
+            if (desc) {
+                let safe = desc.replace(/[^\w\s\u0600-\u06FF]/g, '')
+                               .replace(/\s+/g, '-')
+                               .substring(0, 30);
+                if (safe) {
+                    fileName = safe + '.html';
+                }
+            }
+
+            const blob = new Blob([generatedHTML], { type: 'text/html' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = fileName;
+            a.click();
+            URL.revokeObjectURL(a.href);
+        }
+
+        // زر واتساب عائم (رقمك: 01044907363)
+        const wa = document.createElement('a');
+        wa.href = 'https://wa.me/201044907363';
+        wa.target = '_blank';
+        wa.innerHTML = '💬';
+        wa.style.cssText = 'position:fixed;left:20px;bottom:20px;width:60px;height:60px;background:#00ff88;color:#000;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;text-decoration:none;font-weight:bold;z-index:9999;box-shadow:0 10px 30px rgba(0,255,136,.4)';
+        document.body.appendChild(wa);
+
+        // عداد زيارات
+        let views = localStorage.getItem('lg_views') || 0;
+        views++;
+        localStorage.setItem('lg_views', views);
+        console.log('Views:', views);
+    </script>
+</body>
+</html>
